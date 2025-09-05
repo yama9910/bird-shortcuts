@@ -1,6 +1,6 @@
 {
 	"name": "bird-shortcuts",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
 		"@types/thunderbird-webext-browser": "^127.0.0",
