@@ -1,0 +1,20 @@
+From: test@example.com
+To: you@example.com
+Date: Sat, 06 Sep 2025 00:12:30 +0900
+Message-ID: <body-html-meta-conflict@example.com>
+Subject: [TEST] HTML meta charset conflicts with header
+MIME-Version: 1.0
+X-Test-Case: body_html_meta_conflict
+Content-Type: text/html; charset=iso-2022-jp
+Content-Transfer-Encoding: 8bit
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Meta/Header charset conflict</title>
+</head>
+<body>
+<p>これは HTML 本文です（UTF-8 実体）。日本語のテスト。</p>
+</body>
+</html>

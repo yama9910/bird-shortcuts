@@ -1,0 +1,11 @@
+From: test@example.com
+To: you@example.com
+Date: Sat, 06 Sep 2025 00:12:10 +0900
+Message-ID: <body-iso2022jp-with-cp932-chars@example.com>
+Subject: [TEST] Declared ISO-2022-JP but body bytes are UTF-8 (base64)
+MIME-Version: 1.0
+X-Test-Case: body_iso2022jp_with_cp932_chars
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: base64
+
+5pel5pys6Kqe44Gu44OG44K544OI

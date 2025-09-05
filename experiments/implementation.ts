@@ -60,22 +60,119 @@
 		return wins;
 	};
 
+	const safeDoCommand = (target: any, label: string): boolean => {
+		try {
+			if (target && typeof target.doCommand === "function") {
+				dbg("safeDoCommand: invoking doCommand on", label);
+				target.doCommand();
+				return true;
+			}
+			return false;
+		} catch (e) {
+			dbg("safeDoCommand: doCommand threw", { label, error: String(e) });
+			return false;
+		}
+	};
+
+	const tryToolbarMenuCommand = (doc: any): boolean => {
+		try {
+			dbg("tryToolbarMenuCommand: enter", {
+				hasDoc: !!doc,
+			});
+			const toolbar = doc.getElementById("header-view-toolbar");
+			if (!toolbar) {
+				dbg("tryToolbarMenuCommand: toolbar not found");
+				return false;
+			}
+			const popup = toolbar.querySelector("#otherActionsPopup");
+			if (!popup) {
+				dbg("tryToolbarMenuCommand: otherActionsPopup not found");
+				return false;
+			}
+			const menuItem = popup.querySelector("#charsetRepairMenuitem");
+			if (!menuItem) {
+				dbg("tryToolbarMenuCommand: charsetRepairMenuitem not found under popup");
+				return false;
+			}
+			if (safeDoCommand(menuItem, "toolbarPopup.charsetRepairMenuitem")) {
+				return true;
+			}
+			dbg("tryToolbarMenuCommand: menuItem.doCommand not a function or failed");
+		} catch (e) {
+			dbg("tryToolbarMenuCommand: error", e);
+		}
+		return false;
+	};
+
 	const runRepair = (win: any): boolean => {
+		const wtype = win?.document?.documentElement?.getAttribute?.("windowtype");
+		dbg("runRepair: start", { windowType: wtype });
 		// 既存 UI の「文字化け修復」メニュー項目を優先して叩く
+		// 1) ツールバー配下の otherActionsPopup（userChromeJS と同等の経路）
+		if (tryToolbarMenuCommand(win.document)) {
+			dbg("runRepair: success via toolbar popup in main document");
+			return true;
+		}
+		const msgBrowserDoc = win.document
+			.getElementById("messageBrowser")
+			?.contentDocument;
+		if (msgBrowserDoc) {
+			dbg("runRepair: messageBrowser.contentDocument present");
+			if (tryToolbarMenuCommand(msgBrowserDoc)) {
+				dbg("runRepair: success via toolbar popup in messageBrowser document");
+				return true;
+			}
+		} else {
+			dbg("runRepair: messageBrowser.contentDocument not available");
+		}
+
+		// 1.5) 3pane の各タブのブラウザ(contentDocument)も探索
+		try {
+			const browsers = Array.from(
+				win.document.querySelectorAll('browser[id*="mailMessageTabBrowser"]'),
+			) as any[];
+			dbg("runRepair: tab browsers count", browsers.length);
+			for (const br of browsers) {
+				const brDoc = br?.contentDocument;
+				if (!brDoc) {
+					dbg("runRepair: browser has no contentDocument yet");
+					continue;
+				}
+				if (tryToolbarMenuCommand(brDoc)) {
+					dbg("runRepair: success via toolbar popup in tab browser document");
+					return true;
+				}
+				const inTabItem = brDoc.getElementById("charsetRepairMenuitem");
+				if (inTabItem) {
+					if (safeDoCommand(inTabItem, "tab.charsetRepairMenuitem")) {
+						return true;
+					}
+				}
+			}
+		} catch (e) {
+			dbg("runRepair: error while scanning tab browsers", e);
+		}
+
+		// 2) ドキュメント直下、または messageBrowser 内にメニュー項目があればそれを叩く
 		let elt =
 			win.document.getElementById("charsetRepairMenuitem") ||
-			win.document
-				.getElementById("messageBrowser")
-				?.contentDocument?.getElementById("charsetRepairMenuitem");
-		if (elt && typeof elt.doCommand === "function") {
-			elt.doCommand();
-			return true;
+			msgBrowserDoc?.getElementById("charsetRepairMenuitem");
+		if (elt) {
+			if (safeDoCommand(elt, "docOrMsgBrowser.charsetRepairMenuitem")) {
+				return true;
+			}
 		}
 		// フォールバック: goDoCommand
 		if (typeof win.goDoCommand === "function") {
-			win.goDoCommand("cmd_charsetRepair");
-			return true;
+			try {
+				dbg("runRepair: fallback to goDoCommand('cmd_charsetRepair')");
+				win.goDoCommand("cmd_charsetRepair");
+				return true;
+			} catch (e) {
+				dbg("runRepair: goDoCommand threw", String(e));
+			}
 		}
+		dbg("runRepair: all paths failed");
 		return false;
 	};
 
@@ -102,10 +199,13 @@
 			return {
 				birdShortcuts: {
 					async repairActiveMessage(): Promise<boolean> {
+						dbg("repairActiveMessage: invoked");
 						const win = getActiveMailWindow();
 						if (!win) throw new Error("No active mail window");
 						const ok = runRepair(win);
+						dbg("repairActiveMessage: runRepair result", ok);
 						if (!ok) throw new Error("Repair command not available");
+						dbg("repairActiveMessage: success");
 						return true;
 					},
 					async executeCommand(commandName: string): Promise<boolean> {
