@@ -13,12 +13,6 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# Editor / IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
 # TypeScript
 *.tsbuildinfo
 
@@ -31,4 +25,5 @@ Thumbs.db
 
 # Env / secrets (Thunderbird, web-ext, API keysなど)
 .env
-.env.*
+.env.tb
+.env.*.local

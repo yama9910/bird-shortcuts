@@ -4,6 +4,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
 		"@types/thunderbird-webext-browser": "^127.0.0",
+		"dotenv-cli": "^10.0.0",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.2",
 		"web-ext": "^8.9.0"
@@ -13,7 +14,7 @@
 		"build:exp": "tsc -p tsconfig.experiments.json && cp experiments/schema.json dist/experiments/schema.json",
 		"build:static": "cp -r icons dist/icons && cp src/manifest.json dist/manifest.json",
 		"build": "pnpm run build:bg && pnpm run build:exp && pnpm run build:static",
-		"dev": "pnpm run build && web-ext run --source-dir=dist --firefox=\"/path/to/thunderbird\"",
+    "dev": "pnpm run build && dotenv -e .env.tb -- node scripts/run-webext.mjs",
 		"lint": "biome lint .",
 		"format": "biome format . --write"
 	}
