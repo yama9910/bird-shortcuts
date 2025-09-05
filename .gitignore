@@ -5,6 +5,9 @@ pnpm-lock.yaml
 # Build outputs
 dist/
 artifacts/
+build:bg
+build:exp
+build:static
 
 # Logs
 npm-debug.log*
