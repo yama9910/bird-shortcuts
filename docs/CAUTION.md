@@ -6,10 +6,10 @@ During testing with the sample messages under `docs/test-mails/`, we observed th
 
 - Works: `docs/test-mails/body_mislabel_utf8_header_sjis.eml`
 - Does not repair (in our tests):
-  - `docs/test-mails/body_b64_utf8_header_sjis.eml`
-  - `docs/test-mails/body_html_meta_conflict.eml`
-  - `docs/test-mails/body_iso2022jp_with_cp932_chars.eml`
-  - `docs/test-mails/body_no_charset_fallback_latin1.eml`
+  - [docs/test-mails/body_b64_utf8_header_sjis.eml](test-mails/body_b64_utf8_header_sjis.eml)
+  - [docs/test-mails/body_html_meta_conflict.eml](test-mails/body_html_meta_conflict.eml)
+  - [docs/test-mails/body_iso2022jp_with_cp932_chars.eml](test-mails/body_iso2022jp_with_cp932_chars.eml)
+  - [docs/test-mails/body_no_charset_fallback_latin1.eml](test-mails/body_no_charset_fallback_latin1.eml)
 
 This strongly suggests a limitation in Thunderbird’s built‑in repair logic for these specific mislabeling/encoding scenarios, rather than a bug in this add‑on’s dispatch.
 

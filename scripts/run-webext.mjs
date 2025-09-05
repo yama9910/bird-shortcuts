@@ -2,8 +2,8 @@ import { spawn } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 
-let tbPath = process.env.TB_PATH || "thunderbird";
-let tbProfile = process.env.TB_PROFILE;
+const tbPath = process.env.TB_PATH || "thunderbird";
+const tbProfile = process.env.TB_PROFILE;
 
 const looksLikeExe =
 	tbPath === "thunderbird" || path.basename(tbPath).toLowerCase().includes("thunderbird");

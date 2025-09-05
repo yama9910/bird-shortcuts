@@ -1,26 +1,33 @@
 /// <reference path="./types.d.ts" />
-(function () {
+(() => {
 	/* global ChromeUtils */
 	// 遅延ローダ（ESM優先、古い版はJSM）
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	const lazy: any = {};
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	if (typeof (ChromeUtils as any).defineESModuleGetters === "function") {
+		// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 		(ChromeUtils as any).defineESModuleGetters(lazy, {
 			ExtensionCommon: "resource://gre/modules/ExtensionCommon.sys.mjs",
 			Services: "resource://gre/modules/Services.sys.mjs",
 		});
 	} else {
+		// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 		(ChromeUtils as any).defineLazyModuleGetters(lazy, {
 			ExtensionCommon: "resource://gre/modules/ExtensionCommon.jsm",
 			Services: "resource://gre/modules/Services.jsm",
 		});
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	function ensureExtensionCommon(): any {
 		try {
 			return lazy.ExtensionCommon;
 		} catch (_e) {
+			// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 			const mod = (ChromeUtils as any).import("resource://gre/modules/ExtensionCommon.jsm");
 			Object.defineProperty(lazy, "ExtensionCommon", {
+				// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 				value: (mod as any).ExtensionCommon ?? mod,
 			});
 			return lazy.ExtensionCommon;
@@ -28,10 +35,11 @@
 	}
 
 	// Services に依存せず、XPCOM で Window Mediator に直接アクセス
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	function getWindowMediator(): any {
-		// biome-ignore lint: accessing XPCOM Components members in Thunderbird
+		// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 		return (Components as any).classes["@mozilla.org/appshell/window-mediator;1"].getService(
-			// biome-ignore lint: accessing XPCOM Components members in Thunderbird
+			// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 			(Components as any).interfaces.nsIWindowMediator,
 		);
 	}
@@ -45,21 +53,7 @@
 		return null;
 	};
 
-	const getAllMailWindows = (): any[] => {
-		const wm = getWindowMediator();
-		const wins: any[] = [];
-		for (const type of ["mail:3pane", "mail:messageWindow"]) {
-			// biome-ignore lint: Thunderbird XPCOM enumerator is untyped
-			const e: any = wm.getEnumerator(type);
-			while (e.hasMoreElements()) {
-				// biome-ignore lint: Thunderbird XPCOM window object is untyped
-				const w: any = e.getNext();
-				if (w && !w.closed) wins.push(w);
-			}
-		}
-		return wins;
-	};
-
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	const safeDoCommand = (target: any, label: string): boolean => {
 		try {
 			if (target && typeof target.doCommand === "function") {
@@ -74,6 +68,7 @@
 		}
 	};
 
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	const tryToolbarMenuCommand = (doc: any): boolean => {
 		try {
 			dbg("tryToolbarMenuCommand: enter", {
@@ -104,6 +99,7 @@
 		return false;
 	};
 
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	const runRepair = (win: any): boolean => {
 		const wtype = win?.document?.documentElement?.getAttribute?.("windowtype");
 		dbg("runRepair: start", { windowType: wtype });
@@ -113,9 +109,7 @@
 			dbg("runRepair: success via toolbar popup in main document");
 			return true;
 		}
-		const msgBrowserDoc = win.document
-			.getElementById("messageBrowser")
-			?.contentDocument;
+		const msgBrowserDoc = win.document.getElementById("messageBrowser")?.contentDocument;
 		if (msgBrowserDoc) {
 			dbg("runRepair: messageBrowser.contentDocument present");
 			if (tryToolbarMenuCommand(msgBrowserDoc)) {
@@ -130,6 +124,7 @@
 		try {
 			const browsers = Array.from(
 				win.document.querySelectorAll('browser[id*="mailMessageTabBrowser"]'),
+				// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 			) as any[];
 			dbg("runRepair: tab browsers count", browsers.length);
 			for (const br of browsers) {
@@ -154,7 +149,7 @@
 		}
 
 		// 2) ドキュメント直下、または messageBrowser 内にメニュー項目があればそれを叩く
-		let elt =
+		const elt =
 			win.document.getElementById("charsetRepairMenuitem") ||
 			msgBrowserDoc?.getElementById("charsetRepairMenuitem");
 		if (elt) {
@@ -176,6 +171,7 @@
 		return false;
 	};
 
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	const runCommand = (win: any, cmd: string): boolean => {
 		if (typeof win.goDoCommand === "function") {
 			try {
@@ -189,12 +185,15 @@
 	};
 
 	const DEBUG = true;
+	// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 	function dbg(...args: any[]) {
 		if (DEBUG) console.debug("[bird-shortcuts][exp]", ...args);
 	}
 
 	class APIImpl extends ((lazy.ExtensionCommon?.ExtensionAPI ??
+		// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 		ensureExtensionCommon().ExtensionAPI) as any) {
+		// biome-ignore lint/suspicious/noExplicitAny: このコードは実行時に Thunderbird のグローバルを参照するため
 		getAPI(_context: any) {
 			return {
 				birdShortcuts: {
