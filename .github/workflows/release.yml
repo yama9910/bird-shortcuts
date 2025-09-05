@@ -61,7 +61,7 @@ jobs:
             for (const sha of shas) {
               const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({owner, repo, commit_sha: sha});
               for (const pr of prs.data) {
-                if (pr.base?.ref === "main") prMap.set(pr.number, pr);
+                if (pr.base?.ref === defaultBranch) prMap.set(pr.number, pr);
               }
             }
             const prs = Array.from(prMap.values())
@@ -78,6 +78,31 @@ jobs:
               }
             }
             core.setOutput("body", lines.join("\n"));
+
+      - name: Update CHANGELOG.md and push
+        env:
+          BODY: ${{ steps.notes.outputs.body }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          git fetch origin "$BRANCH"
+          git checkout "$BRANCH"
+          git pull --ff-only origin "$BRANCH"
+
+          # Prepend release notes to CHANGELOG.md
+          TMP_FILE=$(mktemp)
+          { echo "$BODY"; echo; if [ -f CHANGELOG.md ]; then cat CHANGELOG.md; fi; } > "$TMP_FILE"
+          mv "$TMP_FILE" CHANGELOG.md
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add CHANGELOG.md
+            git commit -m "chore: update CHANGELOG for ${GITHUB_REF_NAME}"
+            git push origin "$BRANCH"
+          else
+            echo "No changes to commit in CHANGELOG.md"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -99,7 +124,11 @@ jobs:
         run: pnpm build
 
       - name: Package ZIP
-        run: pnpm zip
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cd dist
+          zip -r "../artifacts/bird-shortcuts-${GITHUB_REF_NAME}.zip" .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -110,4 +139,3 @@ jobs:
           body: ${{ steps.notes.outputs.body }}
           files: |
             artifacts/*.zip
-            dist/**/*
