@@ -18,12 +18,17 @@
     "storage",
     "notifications"
   ],
+  "icons": {
+    "32": "icons/mouse-pointer-click-32.png",
+    "48": "icons/mouse-pointer-click-48.png",
+    "96": "icons/mouse-pointer-click-96.png"
+  },
   "background": {
     "scripts": ["background.js"]
   },
   "message_display_action": {
     "default_icon": {
-      "32": "icons/glasses.svg"
+      "32": "icons/glasses.png"
     },
     "default_title": "文字化け修復"
   },

@@ -23,7 +23,7 @@ async function notify(title: string, message: string) {
   try {
     await browser.notifications.create({
       type: "basic",
-      iconUrl: "icons/repair-32.png",
+      iconUrl: "icons/mouse-pointer-click.svg",
       title,
       message
     });
