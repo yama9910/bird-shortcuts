@@ -6,16 +6,14 @@
  *  - type: "repair"          → 文字化け修復（Experiment: repairActiveMessage）
  *  - type: "command", name   → Thunderbird の goDoCommand("name") を実行（例: "cmd_toggleHeaderMode"）
  */
-export type ActionSlot =
-  | { type: "repair" }
-  | { type: "command"; name: string };
+export type ActionSlot = { type: "repair" } | { type: "command"; name: string };
 
 export type ShortcutConfig = {
-  slots: Record<string, ActionSlot>;
+	slots: Record<string, ActionSlot>;
 };
 
 export const DEFAULT_CONFIG: ShortcutConfig = {
-  slots: {
-    "action-1": { type: "repair" }
-  }
+	slots: {
+		"action-1": { type: "repair" },
+	},
 };

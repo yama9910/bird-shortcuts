@@ -1,23 +1,20 @@
 [
-    {
-      "namespace": "birdShortcuts",
-      "description": "Bridge APIs for Bird Shortcuts",
-      "functions": [
-        {
-          "name": "repairActiveMessage",
-          "type": "function",
-          "async": true,
-          "parameters": []
-        },
-        {
-          "name": "executeCommand",
-          "type": "function",
-          "async": true,
-          "parameters": [
-            { "name": "commandName", "type": "string" }
-          ]
-        }
-      ]
-    }
+	{
+		"namespace": "birdShortcuts",
+		"description": "Bridge APIs for Bird Shortcuts",
+		"functions": [
+			{
+				"name": "repairActiveMessage",
+				"type": "function",
+				"async": true,
+				"parameters": []
+			},
+			{
+				"name": "executeCommand",
+				"type": "function",
+				"async": true,
+				"parameters": [{ "name": "commandName", "type": "string" }]
+			}
+		]
+	}
 ]
-  

@@ -1,47 +1,47 @@
 {
-  "manifest_version": 2,
-  "name": "Bird Shortcuts",
-  "version": "0.1.0",
-  "description": "Thunderbird の標準機能にキーボードショートカットやボタンから素早くアクセス。まずは“文字化け修復”。",
-  "applications": {
-    "gecko": {
-      "id": "bird-shortcuts@example.com",
-      "strict_min_version": "115.0"
-    }
-  },
-  "permissions": [
-    "menus",
-    "storage",
-    "notifications"
-  ],
-  "icons": {
-    "32": "icons/mouse-pointer-click-32.png",
-    "48": "icons/mouse-pointer-click-48.png",
-    "96": "icons/mouse-pointer-click-96.png"
-  },
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "message_display_action": {
-    "default_icon": {
-      "32": "icons/glasses.png"
-    },
-    "default_title": "文字化け修復"
-  },
-  "commands": {
-    "action-1": {
-      "suggested_key": { "default": "Ctrl+Shift+E", "mac": "Command+Shift+E" },
-      "description": "Run mapped action #1 (初期値: エンコーディング修復)"
-    }
-  },
-  "experiment_apis": {
-    "birdShortcuts": {
-      "schema": "experiments/schema.json",
-      "parent": {
-        "scopes": ["addon_parent"],
-        "paths": [["birdShortcuts"]],
-        "script": "experiments/implementation.js"
-      }
-    }
-  }
+	"manifest_version": 2,
+	"name": "Bird Shortcuts",
+	"version": "0.1.0",
+	"description": "Thunderbird の標準機能にキーボードショートカットやボタンから素早くアクセス。まずは“文字化け修復”。",
+	"applications": {
+		"gecko": {
+			"id": "bird-shortcuts@example.com",
+			"strict_min_version": "115.0"
+		}
+	},
+	"permissions": ["menus", "storage", "notifications"],
+	"icons": {
+		"32": "icons/mouse-pointer-click-32.png",
+		"48": "icons/mouse-pointer-click-48.png",
+		"96": "icons/mouse-pointer-click-96.png"
+	},
+	"background": {
+		"scripts": ["background.global.js"]
+	},
+	"message_display_action": {
+		"default_icon": {
+			"32": "icons/glasses.png"
+		},
+		"default_title": "文字化け修復"
+	},
+	"commands": {
+		"action-1": {
+			"suggested_key": { "default": "Ctrl+Shift+E", "mac": "Command+Shift+E" },
+			"description": "機能1. エンコーディングの自動推定・修正を実行"
+		}
+	},
+	"options_ui": {
+		"page": "options.html",
+		"open_in_tab": true
+	},
+	"experiment_apis": {
+		"birdShortcuts": {
+			"schema": "experiments/schema.json",
+			"parent": {
+				"scopes": ["addon_parent"],
+				"paths": [["birdShortcuts"]],
+				"script": "experiments/implementation.js"
+			}
+		}
+	}
 }
