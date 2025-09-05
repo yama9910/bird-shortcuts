@@ -1,21 +1,4 @@
-import { DEFAULT_CONFIG, type ActionSlot, type ShortcutConfig } from "./config"
-
-// ---- storage helpers ----
-async function loadConfig(): Promise<ShortcutConfig> {
-  const data = await browser.storage.local.get("config");
-  const conf = (data?.config ?? DEFAULT_CONFIG) as ShortcutConfig;
-  // 新しいスロットが増えた場合など、デフォルトをマージして冪等化
-  const merged: ShortcutConfig = {
-    slots: { ...DEFAULT_CONFIG.slots, ...conf.slots }
-  };
-  if (JSON.stringify(merged) !== JSON.stringify(conf)) {
-    await saveConfig(merged);
-  }
-  return merged;
-}
-async function saveConfig(config: ShortcutConfig): Promise<void> {
-  await browser.storage.local.set({ config });
-}
+import { type ActionSlot, DEFAULT_CONFIG } from "./config"
 
 // ---- action runners ----
 async function runAction(action: ActionSlot): Promise<boolean> {
@@ -51,8 +34,7 @@ async function notify(title: string, message: string) {
 
 // ---- wiring ----
 async function handleCommand(commandId: string) {
-  const config = await loadConfig();
-  const action = config.slots[commandId];
+  const action = DEFAULT_CONFIG.slots[commandId];
   if (!action) {
     await notify("Bird Shortcuts", `未割り当てスロット: ${commandId}`);
     return;
@@ -84,5 +66,5 @@ browser.menus.onClicked.addListener(async (info) => {
 
 // 起動時にデフォルト設定を保存（初回のみ）
 (async () => {
-  await loadConfig();
+  await browser.storage.local.set({ config: DEFAULT_CONFIG });
 })();
