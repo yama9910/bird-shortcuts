@@ -10,7 +10,15 @@ By default, Action #1 is assigned to Repair Text Encoding. Additional actions ar
 - Via Experiment API
   - Repair Text Encoding (bridges to the UI because there's no dedicated API)
   - Execute arbitrary `goDoCommand("cmd_xxx")`
-- Modern dev stack: TypeScript / pnpm / tsup / Biome / web-ext
+- Options page (read-only): shows the currently assigned shortcut for Action #1
+- Dev stack: TypeScript / pnpm / tsup / Biome / web-ext
+
+## Documentation
+
+- アドオン導入手順（日本語）: [docs/INSTALL.ja.md](docs/INSTALL.ja.md)
+- Installation (EN): [docs/INSTALL.md](docs/INSTALL.md)
+- Limitations / Caution: [docs/CAUTION.md](docs/CAUTION.md)
+- 日本語版README: [README.ja.md](README.ja.md)
 
 ## Requirements
 
@@ -55,7 +63,7 @@ TB_ARGS=-no-remote -foreground
 ```
 Notes:
 - `TB_ARGS` keeps Thunderbird in the foreground and prevents reusing an existing instance, which is recommended in development.
-- Only `TB_PATH` and `TB_PROFILE` are used. Windows-specific variables are no longer supported.
+- The dev runner uses `TB_PATH`, `TB_PROFILE`, and `TB_ARGS`. Windows-specific variables are no longer supported.
 
 6) Run in development
 ```bash
@@ -96,19 +104,22 @@ TB_ARGS=-no-remote -foreground -purgecaches
 
 - `pnpm run build:bg` — Bundle `src/background.ts` with tsup (IIFE)
 - `pnpm run build:exp` — Type-check experiments and copy `experiments/schema.json`
+- `pnpm run build:options` — Bundle `src/options.ts` with tsup (IIFE)
 - `pnpm run build:static` — Copy icons and `src/manifest.json` to `dist/`
-- `pnpm run build` — Run all of the above
+- `pnpm run typecheck` — Type-check both extension and experiments (no emit)
+- `pnpm run build` — Type-check, then run all of the above
 - `pnpm run dev` — Build then run via `web-ext run` (uses `.env.tb`)
 - `pnpm run lint` — Lint with Biome
 - `pnpm run format` — Format with Biome
 
 ## Project structure
 
-- `src/` — Background script and manifest
+- `src/` — Background script, manifest, and options page (`options.html`, `options.ts`, `options.css`)
 - `experiments/` — Experiment API schema and implementation
 - `icons/` — Extension icons
 - `dist/` — Build output (generated)
 - `scripts/run-webext.mjs` — Dev runner for `web-ext run` (Linux-only)
+- `docs/` — Documentation (installation guides, cautions, and test materials)
 
 ## Troubleshooting
 
