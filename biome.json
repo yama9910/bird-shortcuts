@@ -1,6 +1,7 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
-  "formatter": { "enabled": true, "lineWidth": 100 },
-  "linter": { "enabled": true },
-  "vcs": { "enabled": true }
+	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+	"formatter": { "enabled": true, "lineWidth": 100 },
+	"linter": { "enabled": true },
+	"files": { "includes": ["src/**/*", "experiments/**/*", "scripts/**/*"] },
+	"vcs": { "enabled": true, "clientKind": "git" }
 }

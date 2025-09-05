@@ -4,16 +4,20 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
 		"@types/thunderbird-webext-browser": "^127.0.0",
+		"dotenv-cli": "^10.0.0",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.2",
 		"web-ext": "^8.9.0"
 	},
 	"scripts": {
-		"build:bg": "tsup src/background.ts --format iife --global-name=bg --minify --sourcemap --out-dir dist",
-		"build:exp": "tsc -p tsconfig.experiments.json && cp experiments/schema.json dist/experiments/schema.json",
-		"build:static": "cp -r icons dist/icons && cp src/manifest.json dist/manifest.json",
-		"build": "pnpm run build:bg && pnpm run build:exp && pnpm run build:static",
-		"dev": "pnpm run build && web-ext run --source-dir=dist --firefox=\"/path/to/thunderbird\"",
+		"clean": "rm -rf dist",
+		"build:bg": "tsup src/background.ts --format iife --minify --sourcemap --out-dir dist",
+		"build:exp": "tsc -p tsconfig.experiments.json && mkdir -p dist/experiments && cp experiments/schema.json dist/experiments/schema.json",
+		"build:options": "tsup src/options.ts --format iife --minify --sourcemap --out-dir dist",
+		"build:static": "mkdir -p dist/icons && cp -r icons/* dist/icons/ && cp src/manifest.json dist/manifest.json && test -f src/options.html && cp src/options.html dist/options.html || true && test -f src/options.css && cp src/options.css dist/options.css || true",
+		"typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.experiments.json --noEmit",
+		"build": "pnpm run typecheck && pnpm run clean && pnpm run build:bg && pnpm run build:exp && pnpm run build:options && pnpm run build:static",
+		"dev": "pnpm run build && dotenv -e .env.tb -- node scripts/run-webext.mjs",
 		"lint": "biome lint .",
 		"format": "biome format . --write"
 	}

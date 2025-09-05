@@ -1,0 +1,11 @@
+From: test@example.com
+To: you@example.com
+Date: Sat, 06 Sep 2025 00:12:40 +0900
+Message-ID: <body-b64-utf8-header-sjis@example.com>
+Subject: [TEST] Base64 UTF-8 body but header says Shift_JIS
+MIME-Version: 1.0
+X-Test-Case: body_b64_utf8_header_sjis
+Content-Type: text/plain; charset=shift_jis
+Content-Transfer-Encoding: base64
+
+5pel5pys6Kqe44Gu44OG44K544OI

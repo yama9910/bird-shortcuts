@@ -1,0 +1,11 @@
+From: test@example.com
+To: you@example.com
+Date: Sat, 06 Sep 2025 00:11:00 +0900
+Message-ID: <body-mislabel-utf8-header-sjis@example.com>
+Subject: [TEST] UTF-8 body but header says Shift_JIS
+MIME-Version: 1.0
+X-Test-Case: body_mislabel_utf8_header_sjis
+Content-Type: text/plain; charset=shift_jis
+Content-Transfer-Encoding: 8bit
+
+日本語のテスト①㈱髙 — UTF-8 実体／宣言は Shift_JIS（意図的な誤ラベル）
