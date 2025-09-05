@@ -1,0 +1,34 @@
+# Node.js / pnpm
+node_modules/
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+artifacts/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Biome cache
+.biome/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Env / secrets (Thunderbird, web-ext, API keysなど)
+.env
+.env.*

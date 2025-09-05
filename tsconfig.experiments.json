@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2020"],
+    "module": "none",
+    "removeComments": false,
+    "outDir": "dist/experiments",
+    "strict": false,
+    "skipLibCheck": true
+  },
+  "include": ["experiments/implementation.ts", "experiments/types.d.ts"]
+}
