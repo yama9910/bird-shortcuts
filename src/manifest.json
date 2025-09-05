@@ -10,11 +10,7 @@
     }
   },
   "permissions": [
-    "messagesRead",
     "menus",
-    "mailTabs",
-    "messages",
-    "compose",
     "storage",
     "notifications"
   ],
