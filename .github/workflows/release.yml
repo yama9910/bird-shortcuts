@@ -48,11 +48,13 @@ jobs:
             const {owner, repo} = context.repo;
             const curTag = process.env.GITHUB_REF_NAME;
             const prevTag = "${{ steps.prev.outputs.prev }}";
+            const defaultBranch = context.payload?.repository?.default_branch || "main";
             let compare;
             if (prevTag) {
               compare = await github.rest.repos.compareCommits({owner, repo, base: prevTag, head: curTag});
             } else {
-              compare = await github.rest.repos.compareCommits({owner, repo, base: "main~50", head: curTag});
+              // Fallback: compare from default branch to current tag when no previous tag exists
+              compare = await github.rest.repos.compareCommits({owner, repo, base: defaultBranch, head: curTag});
             }
             const shas = compare.data.commits.map(c => c.sha);
             const prMap = new Map();
