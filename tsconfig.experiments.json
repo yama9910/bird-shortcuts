@@ -3,11 +3,10 @@
     "target": "ES2019",
     "lib": ["ES2020", "DOM"],
     "module": "none",
-    "removeComments": false,
+    "removeComments": true,
     "outDir": "dist/experiments",
     "strict": false,
     "skipLibCheck": true
   },
   "include": ["experiments/implementation.ts", "experiments/types.d.ts"],
-  "exclude": ["node_modules", "dist"]
 }
